@@ -63,7 +63,7 @@ def modexPD(agentes, R_max):
     return estrategia, esfuerzo_total, extremismo
 
 # Leer datos desde el archivo
-with open('Pruebas/Prueba3.txt', 'r') as file:
+with open('Pruebas/Prueba1.txt', 'r') as file:
     leer = file.readlines()
 
 # Leer la cantidad de agentes
