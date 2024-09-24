@@ -10,7 +10,7 @@ def calculate_extremism(agents):
 
 def calculate_effort(agents, strategy):
     """Calcula el esfuerzo basado en las estrategias aplicadas."""
-    effort = sum(abs(opinion) * (1 - receptivity) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
+    effort = sum(math.ceil(abs(opinion) * (1 - receptivity)) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
     return effort
 
 def apply_strategy(agents, strategy):

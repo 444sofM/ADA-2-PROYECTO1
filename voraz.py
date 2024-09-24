@@ -8,7 +8,8 @@ def calculate_extremism(agents):
 
 def calculate_effort(agents, strategy):
     """Calcula el esfuerzo basado en las estrategias aplicadas."""
-    effort = sum(abs(opinion) * (1 - receptivity) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
+    # Usar la función techo (math.ceil) para calcular el esfuerzo
+    effort = sum(math.ceil(abs(opinion) * (1 - receptivity)) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
     return effort
 
 def apply_strategy(agents, strategy):
@@ -16,30 +17,34 @@ def apply_strategy(agents, strategy):
     moderated_agents = [(0, receptivity) if mod == 1 else (opinion, receptivity) for (opinion, receptivity), mod in zip(agents, strategy)]
     return moderated_agents
 
-def modexGreedy(agents, R_max):
-    """Algoritmo voraz para moderar las opiniones más extremas dentro del esfuerzo permitido."""
-    # Ordenar los agentes por la magnitud de sus opiniones de manera descendente
-    sorted_agents = sorted(enumerate(agents), key=lambda x: abs(x[1][0]), reverse=True)
+def voraz_modex(agents, R_max): 
+    """Algoritmo voraz que prioriza |opinion| / (1 - receptividad) dentro del esfuerzo permitido."""
+    # Crear una lista de diccionarios para compatibilidad con voraz_modex
+    agentes_ordenados = sorted(agents, key=lambda x: abs(x[0]) / (1 - x[1]), reverse=True)
     
-    n = len(agents)
-    strategy = [0] * n
-    current_effort = 0
-
-    for i, (index, (opinion, receptivity)) in enumerate(sorted_agents):
-        effort_to_moderate = abs(opinion) * (1 - receptivity)
+    estrategia = [0] * len(agents)  # Inicialmente, ningún agente está moderado
+    esfuerzo_total = 0
+    extremismo_total = 0
+    
+    for i, (opinion, receptividad) in enumerate(agentes_ordenados):
+        # Calcular el costo de moderación usando la función techo
+        costo_moderacion = math.ceil(abs(opinion) * (1 - receptividad))
         
-        if current_effort + effort_to_moderate <= R_max:
-            # Moderar esta opinión si el esfuerzo está dentro del límite
-            strategy[index] = 1
-            current_effort += effort_to_moderate
-
-    moderated_agents = apply_strategy(agents, strategy)
-    extremism = calculate_extremism(moderated_agents)
+        # Si aún queda presupuesto, moderamos al agente
+        if esfuerzo_total + costo_moderacion <= R_max:
+            esfuerzo_total += costo_moderacion
+            estrategia[i] = 1  # Marcamos al agente como moderado
+            extremismo_total += 0  # El extremismo de este agente se reduce a 0
+        else:
+            extremismo_total += opinion ** 2  # No se modera, su extremismo sigue igual
     
-    return strategy, current_effort, extremism
+    # Calcular el extremismo de la red después de aplicar la estrategia
+    extremismo_red_moderada = math.sqrt(extremismo_total) / len(agents)
+    
+    return estrategia, esfuerzo_total, extremismo_red_moderada
 
 # Leer datos desde el archivo
-with open('Pruebas/Prueba3.txt', 'r') as file:
+with open('Pruebas/Prueba45.txt', 'r') as file:
     leer = file.readlines()
 
 # Leer la cantidad de agentes
@@ -59,6 +64,6 @@ for line in leer[1:agentnumber + 1]:
 
 print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
 
-# Ejecutar la función modexGreedy con los datos y R_max
-greedy_result = modexGreedy(datos, rmax)
+# Ejecutar la función voraz_modex con los datos y R_max
+greedy_result = voraz_modex(datos, rmax)
 print(greedy_result)
