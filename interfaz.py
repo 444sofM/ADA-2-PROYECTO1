@@ -4,7 +4,7 @@ from tkinter import ttk
 import time
 import os
 
-# Algoritmos de ejemplo (debes implementar estos módulos)
+
 import fuerzabruta
 import voraz
 import dinamica
