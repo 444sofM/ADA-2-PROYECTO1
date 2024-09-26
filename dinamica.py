@@ -8,7 +8,7 @@ def calculate_extremism(agents):
 
 def calculate_effort(agents, strategy):
     """Calcula el esfuerzo basado en las estrategias aplicadas."""
-    effort = sum(abs(opinion) * (1 - receptivity) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
+    effort = sum(math.ceil(abs(opinion) * (1 - receptivity)) for (opinion, receptivity), mod in zip(agents, strategy) if mod == 1)
     return effort
 
 def apply_strategy(agents, strategy):
@@ -66,7 +66,7 @@ def modexPD(agents, R_max):
     return estrategia, esfuerzo_total, extremismo
 
 # Leer datos desde el archivo
-with open('Pruebas/Prueba30.txt', 'r') as file:
+with open('Pruebas/Prueba1.txt', 'r') as file:
     leer = file.readlines()
 
 # Leer la cantidad de agentes
@@ -84,8 +84,8 @@ for line in leer[1:agentnumber + 1]:
         elementos = line.split(',')
         datos.append((int(elementos[0]), float(elementos[1])))
 
-print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
+""" print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
 
 # Ejecutar la función modexPD con los datos y R_max
 resultado = modexPD(datos, rmax)
-print(resultado)
+print(resultado) """

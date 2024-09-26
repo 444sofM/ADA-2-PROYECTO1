@@ -17,7 +17,7 @@ def apply_strategy(agents, strategy):
     moderated_agents = [(0, receptivity) if mod == 1 else (opinion, receptivity) for (opinion, receptivity), mod in zip(agents, strategy)]
     return moderated_agents
 
-def voraz_modex(agents, R_max): 
+def modexGreedy(agents, R_max): 
     """Algoritmo voraz que prioriza |opinion| / (1 - receptividad) dentro del esfuerzo permitido."""
     # Crear una lista de diccionarios para compatibilidad con voraz_modex
     agentes_ordenados = sorted(agents, key=lambda x: abs(x[0]) / (1 - x[1]), reverse=True)
@@ -44,7 +44,7 @@ def voraz_modex(agents, R_max):
     return estrategia, esfuerzo_total, extremismo_red_moderada
 
 # Leer datos desde el archivo
-with open('Pruebas/Prueba45.txt', 'r') as file:
+with open('Pruebas/Prueba1.txt', 'r') as file:
     leer = file.readlines()
 
 # Leer la cantidad de agentes
@@ -62,8 +62,9 @@ for line in leer[1:agentnumber + 1]:
         elementos = line.split(',')
         datos.append((int(elementos[0]), float(elementos[1])))
 
-print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
+""" print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
 
 # Ejecutar la función voraz_modex con los datos y R_max
-greedy_result = voraz_modex(datos, rmax)
+greedy_result = modexGreedy(datos, rmax)
 print(greedy_result)
+ """

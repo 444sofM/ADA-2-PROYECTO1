@@ -58,8 +58,9 @@ for line in leer[1:agentnumber + 1]:
         elementos = line.split(',')
         datos.append((int(elementos[0]), float(elementos[1])))
 
-print(f"Datos: {datos}, R_max: {rmax}")  # Debugging line
+""" print(f"Datos: {datos}, R_max: {rmax}")  # Debugging line
 
 # Ejecutar la función modexFB con los datos y R_max
 fuerzab = modexFB(datos, rmax)
 print(fuerzab)
+ """

@@ -1,0 +1,13 @@
+Algoritmo: Fuerza Bruta
+Tiempo de ejecucion: 0.0036 segundos
+Total de agentes: 10
+Recurso maximo: 73
+Estrategia: (1, 0, 1, 0, 0, 1, 0, 1, 0, 0)
+Esfuerzo total: 67.000000
+Extremismo: 15.717506
+
+Agentes moderados:
+Agente 1: Opinion = 42, Receptividad = 0.9128290988596333
+Agente 3: Opinion = 56, Receptividad = 0.7866686306091604
+Agente 6: Opinion = 83, Receptividad = 0.6401715016422259
+Agente 8: Opinion = 71, Receptividad = 0.7072171911236341
