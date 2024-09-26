@@ -16,8 +16,6 @@ class MyApp:
         self.filename = ""
         self.algorithm = tk.StringVar()
         self.algorithm.set("Fuerza Bruta")  # Valor por defecto
-
-        # Cambiar el título de la ventana principal
         self.root.title("ADA-II")
 
         # Configuración de la interfaz gráfica
