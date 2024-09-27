@@ -18,7 +18,7 @@ def apply_strategy(agents, strategy):
     moderated_agents = [(0, receptivity) if mod == 1 else (opinion, receptivity) for (opinion, receptivity), mod in zip(agents, strategy)]
     return moderated_agents
 
-def modexFB(agents, R_max):
+def rocFB(agents, R_max):
     """Encuentra la mejor estrategia de moderación que minimiza el extremismo dentro del esfuerzo permitido."""
     n = len(agents)
     best_strategy = None
@@ -60,7 +60,7 @@ for line in leer[1:agentnumber + 1]:
 
 """ print(f"Datos: {datos}, R_max: {rmax}")  # Debugging line
 
-# Ejecutar la función modexFB con los datos y R_max
-fuerzab = modexFB(datos, rmax)
+# Ejecutar la función rocFB con los datos y R_max
+fuerzab = rocFB(datos, rmax)
 print(fuerzab)
  """

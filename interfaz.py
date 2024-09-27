@@ -4,7 +4,6 @@ from tkinter import ttk
 import time
 import os
 
-
 import fuerzabruta
 import voraz
 import dinamica
@@ -16,40 +15,71 @@ class MyApp:
         self.filename = ""
         self.algorithm = tk.StringVar()
         self.algorithm.set("Fuerza Bruta")  # Valor por defecto
-        self.root.title("ADA-II")
+
+        # Cambiar el título de la ventana principal
+        self.root.title("ADA-2-PROYECTO1")
 
         # Configuración de la interfaz gráfica
         self.file_label = tk.Label(root, text="No file loaded")
         self.file_label.pack()
 
-        self.text_area = tk.Text(root, height=10, width=50)
-        self.text_area.pack()
-
-        self.result_text_area = tk.Text(root, height=10, width=50)
-        self.result_text_area.pack()
-
         self.result_label = tk.Label(root, text="")
         self.result_label.pack()
 
-        self.load_button = tk.Button(root, text="Cargar Prueba", command=self.load_file)
-        self.load_button.pack()
+        # Crear un Frame para los botones
+        self.button_frame = tk.Frame(root)
+        self.button_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
-        self.run_button = tk.Button(root, text="Ejecutar Algoritmo", command=self.run_algorithm)
-        self.run_button.pack()
+        self.load_button = tk.Button(self.button_frame, text="Cargar Prueba", command=self.load_file)
+        self.load_button.pack(pady=5)
 
-        self.save_button = tk.Button(root, text="Guardar Resultados", command=self.save_results)
-        self.save_button.pack()
+        self.run_button = tk.Button(self.button_frame, text="Ejecutar Algoritmo", command=self.run_algorithm)
+        self.run_button.pack(pady=5)
 
-        self.algorithm_menu = tk.OptionMenu(root, self.algorithm, "Fuerza Bruta", "Voraz", "Programación Dinámica")
-        self.algorithm_menu.pack()
+        self.save_button = tk.Button(self.button_frame, text="Guardar Resultados", command=self.save_results)
+        self.save_button.pack(pady=5)
 
-        # Añadir el widget Treeview para mostrar los resultados en una tabla
-        self.tree = ttk.Treeview(root, columns=("Agente", "Opinión", "Receptividad", "Moderado"), show='headings')
+        self.clear_button = tk.Button(self.button_frame, text="Limpiar Tablas", command=self.clear_tables)
+        self.clear_button.pack(pady=5)
+
+        self.algorithm_menu = tk.OptionMenu(self.button_frame, self.algorithm, "Fuerza Bruta", "Voraz", "Programación Dinámica")
+        self.algorithm_menu.pack(pady=5)
+
+        # Título para la tabla de entrada
+        self.input_label = tk.Label(root, text="Datos de Entrada")
+        self.input_label.pack()
+
+        # Widget Treeview para mostrar los datos de entrada en una tabla
+        self.input_tree = ttk.Treeview(root, columns=("Agente", "Opinión", "Receptividad", "Total Agentes", "R_max"), show='headings')
+        self.input_tree.heading("Agente", text="Agente")
+        self.input_tree.heading("Opinión", text="Opinión")
+        self.input_tree.heading("Receptividad", text="Receptividad")
+        self.input_tree.heading("Total Agentes", text="Total Agentes")
+        self.input_tree.heading("R_max", text="R_max")
+        self.input_tree.pack(padx=10, pady=10)
+        
+        # Centrar los datos en las columnas de la tabla de entrada
+        for col in self.input_tree["columns"]:
+            self.input_tree.column(col, anchor="center")
+
+        # Título para la tabla de salida
+        self.output_label = tk.Label(root, text="Resultados")
+        self.output_label.pack()
+
+        #Widget Treeview para mostrar los resultados en una tabla
+        self.tree = ttk.Treeview(root, columns=("Agente", "Opinión", "Receptividad", "Moderado", "Total Agentes", "Esfuerzo Total", "Extremismo"), show='headings')
         self.tree.heading("Agente", text="Agente")
         self.tree.heading("Opinión", text="Opinión")
         self.tree.heading("Receptividad", text="Receptividad")
         self.tree.heading("Moderado", text="Moderado")
-        self.tree.pack()
+        self.tree.heading("Total Agentes", text="Total Agentes")
+        self.tree.heading("Esfuerzo Total", text="Esfuerzo Total")
+        self.tree.heading("Extremismo", text="Extremismo")
+        self.tree.pack(padx=10, pady=10)
+        
+        # Centrar los datos en las columnas de la tabla de resultados
+        for col in self.tree["columns"]:
+            self.tree.column(col, anchor="center")
 
     def load_file(self):
         file_path = filedialog.askopenfilename()
@@ -63,9 +93,18 @@ class MyApp:
                 # Actualizar la etiqueta con el nombre del archivo
                 self.file_label.config(text=f"Prueba cargada: {self.filename}", fg="blue")
 
-                # Mostrar el contenido del archivo en el área de texto
-                self.text_area.delete(1.0, tk.END)
-                self.text_area.insert(tk.END, self.test_data)
+                # Limpiar la tabla de datos de entrada
+                for item in self.input_tree.get_children():
+                    self.input_tree.delete(item)
+
+                # Insertar los datos de entrada en la tabla
+                data, R_max = self.parse_test_data(self.test_data)
+
+                # Insertar los datos de resumen al inicio de la tabla de entrada
+                self.input_tree.insert("", "end", values=("", "", "", len(data), R_max))
+
+                for i, (opinion, receptivity) in enumerate(data):
+                    self.input_tree.insert("", "end", values=(i + 1, opinion, receptivity, "", ""))
 
     def run_algorithm(self):
         if not self.test_data:
@@ -77,9 +116,6 @@ class MyApp:
             data, R_max = self.parse_test_data(self.test_data)
             algorithm = self.algorithm.get()
 
-            # Limpiar el área de texto de resultados
-            self.result_text_area.delete(1.0, tk.END)
-
             # Limpiar la tabla de resultados
             for item in self.tree.get_children():
                 self.tree.delete(item)
@@ -89,11 +125,11 @@ class MyApp:
 
             # Ejecutar el algoritmo seleccionado
             if algorithm == "Fuerza Bruta":
-                strategy, effort, extremism = fuerzabruta.modexFB(data, R_max)
+                strategy, effort, extremism = fuerzabruta.rocFB(data, R_max)
             elif algorithm == "Voraz":
-                strategy, effort, extremism = voraz.modexGreedy(data, R_max)
+                strategy, effort, extremism = voraz.rocV(data, R_max)
             elif algorithm == "Programación Dinámica":
-                strategy, effort, extremism = dinamica.modexPD(data, R_max)
+                strategy, effort, extremism = dinamica.rocPD(data, R_max)
             else:
                 messagebox.showerror("Error", "Algoritmo no reconocido.")
                 return
@@ -101,34 +137,25 @@ class MyApp:
             end_time = time.time()  # Fin del tiempo de ejecución
             execution_time = end_time - start_time  # Tiempo transcurrido
 
-            # Formatear los resultados
-            self.result_text = f"Algoritmo: {algorithm}\n"
-            self.result_text += f"Tiempo de ejecución: {execution_time:.4f} segundos\n"
-            self.result_text += f"Total de agentes: {len(data)}\n"
-            self.result_text += f"Recurso máximo: {R_max}\n"
-            self.result_text += f"Estrategia: {strategy}\n"
-            self.result_text += f"Esfuerzo total: {effort:.6f}\n"
-            self.result_text += f"Extremismo: {extremism:.6f}\n\n"
-            self.result_text += "Agentes moderados:\n"
-            for i, (opinion, receptivity) in enumerate(data):
-                moderado = "Sí" if strategy[i] == 1 else "No"
-                self.result_text += f"Agente {i + 1}: Opinión = {opinion}, Receptividad = {receptivity}, Moderado = {moderado}\n"
-                # Insertar los datos en la tabla
-                self.tree.insert("", "end", values=(i + 1, opinion, receptivity, moderado))
+            # Insertar los datos de resumen al inicio de la tabla de resultados
+            self.tree.insert("", "end", values=("", "", "", "", len(data), f"{effort:.2f}", f"{extremism:.2f}"))
 
-            # Mostrar los resultados en el área de texto
-            self.result_text_area.insert(tk.END, self.result_text)
+            # Insertar los datos de resultados en la tabla
+            for i, (opinion, receptivity) in enumerate(data):
+                moderado = "Si" if strategy[i] == 1 else "No"
+                self.tree.insert("", "end", values=(i + 1, opinion, receptivity, moderado, "", "", ""))
 
         except Exception as e:
             self.result_label.config(text="Error al ejecutar el algoritmo", fg="red")
             messagebox.showerror("Error", f"Ocurrió un error: {str(e)}")
 
+
     def save_results(self):
-        if not hasattr(self, 'result_text'):
+        if not self.tree.get_children():
             messagebox.showerror("Error", "No hay resultados para guardar. Ejecuta un algoritmo primero.")
             return
 
-        # Crear la carpeta 'resultados' si no existe
+        # Crear la carpeta 'Resultados' si no existe
         if not os.path.exists('Resultados'):
             os.makedirs('Resultados')
 
@@ -139,8 +166,37 @@ class MyApp:
         file_path = os.path.join('Resultados', output_filename)
 
         with open(file_path, 'w') as file:
-            file.write(self.result_text)
+            # Escribir el extremismo y el esfuerzo total
+            extremism = self.tree.item(self.tree.get_children()[0], 'values')[6]
+            effort = self.tree.item(self.tree.get_children()[0], 'values')[5]
+            file.write(f"Extremismo {extremism}\n\n")
+            file.write(f"Esfuerzo {effort}\n\n")
+
+            # Escribir los agentes moderados y no moderados
+            for item in self.tree.get_children()[1:]:
+                values = self.tree.item(item, 'values')
+                moderado = 0
+                if values[3] == "Si": 
+                    moderado = 1
+                
+                file.write(f"{moderado}\n")
+
         messagebox.showinfo("Guardado", f"Resultados guardados en {file_path}")
+    def clear_tables(self):
+        # Limpiar la tabla de datos de entrada
+        for item in self.input_tree.get_children():
+            self.input_tree.delete(item)
+
+        # Limpiar la tabla de resultados
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        # Limpiar la etiqueta de archivo cargado
+        self.file_label.config(text="No file loaded", fg="black")
+
+        # Limpiar los datos de prueba
+        self.test_data = ""
+        self.filename = ""
 
     def parse_test_data(self, test_data):
         lines = test_data.strip().split('\n')
@@ -154,7 +210,7 @@ class MyApp:
                 datos.append((int(elementos[0]), float(elementos[1])))
         return datos, rmax
 
-# Ejemplo de uso
+
 root = tk.Tk()
 app = MyApp(root)
 root.mainloop()
