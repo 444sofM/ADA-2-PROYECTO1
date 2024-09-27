@@ -1,13 +1,14 @@
-Algoritmo: Voraz
-Tiempo de ejecucion: 0.0000 segundos
-Total de agentes: 10
-Recurso maximo: 73
-Estrategia: [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
-Esfuerzo total: 67.000000
-Extremismo: 15.717506
+Extremismo 15.72
 
-Agentes moderados:
-Agente 1: Opinion = 42, Receptividad = 0.9128290988596333
-Agente 2: Opinion = 50, Receptividad = 0.6089488930676293
-Agente 3: Opinion = 56, Receptividad = 0.7866686306091604
-Agente 4: Opinion = 40, Receptividad = 0.30487602574052586
+Esfuerzo 67.00
+
+1
+1
+1
+1
+0
+0
+0
+0
+0
+0

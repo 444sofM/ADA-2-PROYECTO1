@@ -16,7 +16,7 @@ def apply_strategy(agents, strategy):
     moderated_agents = [(0, receptivity) if mod == 1 else (opinion, receptivity) for (opinion, receptivity), mod in zip(agents, strategy)]
     return moderated_agents
 
-def modexPD(agents, R_max):
+def rocPD(agents, R_max):
     n = len(agents)
     
     # Inicializar tabla dp y track
@@ -86,6 +86,6 @@ for line in leer[1:agentnumber + 1]:
 
 """ print(f"Datos: {datos}, R_max: {rmax}")  # Línea para depuración
 
-# Ejecutar la función modexPD con los datos y R_max
-resultado = modexPD(datos, rmax)
+# Ejecutar la función rocPD con los datos y R_max
+resultado = rocPD(datos, rmax)
 print(resultado) """
